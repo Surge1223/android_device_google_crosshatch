@@ -34,7 +34,7 @@ TARGET_2ND_CPU_VARIANT := cortex-a75
 TARGET_BOARD_COMMON_PATH := device/google/crosshatch/sdm845
 
 BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 androidboot.console=ttyMSM0 printk.devkmsg=on
-BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x237
+BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x237 enforcing=0 androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += ehci-hcd.park=3
 BOARD_KERNEL_CMDLINE += service_locator.enable=1
 BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware
@@ -178,7 +178,7 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 WIFI_HIDL_FEATURE_AWARE := true
-WIFI_HIDL_FEATURE_DUAL_INTERFACE:= true
+WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 
 # Audio
 BOARD_USES_ALSA_AUDIO := true
