@@ -47,7 +47,7 @@ PRODUCT_COPY_FILES += \
 
 # Enable on-access verification of priv apps. This requires fs-verity support in kernel.
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.apk_verity.mode=1
+    ro.apk_verity.mode=0
 
 PRODUCT_PACKAGES += \
     messaging \
@@ -670,6 +670,11 @@ PRODUCT_PACKAGES += \
 # Fingerprint
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint@2.1-service.fpc
+
+# Keystore
+PRODUCT_PACKAGES += \
+   android.hardware.keymaster@4.0-service \
+   libkeymaster4support
 
 # Reliability reporting
 PRODUCT_PACKAGES += \
