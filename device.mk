@@ -15,11 +15,12 @@
 #
 
 PRODUCT_SOONG_NAMESPACES += \
-    device/google/crosshatch \
+    device/google/crosshatch/pixelstats \
+    device/google/crosshatch/usb \
+    device/google/crosshatch/health \
     hardware/google/av \
     hardware/google/interfaces \
-    hardware/qcom/sdm845 \
-    vendor/qcom/sdm845
+    hardware/qcom/sdm845/display
 
 PRODUCT_PROPERTY_OVERRIDES += \
     keyguard.no_require_sim=true
@@ -40,18 +41,16 @@ PRODUCT_COPY_FILES += \
 
 # Enforce privapp-permissions whitelist
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.control_privapp_permissions=disable
-
+    ro.control_privapp_permissions=enforce
 PRODUCT_COPY_FILES += \
     device/google/crosshatch/permissions/privapp-permissions-aosp.xml:system/etc/permissions/privapp-permissions-aosp.xml
 
 # Enable on-access verification of priv apps. This requires fs-verity support in kernel.
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.apk_verity.mode=0
+    ro.apk_verity.mode=1
 
 PRODUCT_PACKAGES += \
-    messaging \
-    netutils-wrapper-1.0
+    messaging
 
 LOCAL_PATH := device/google/crosshatch
 SRC_MEDIA_HAL_DIR := hardware/qcom/media/sdm845
@@ -65,13 +64,23 @@ ifeq ($(wildcard vendor/google_devices/crosshatch/proprietary/device-vendor-cros
     BUILD_WITHOUT_VENDOR := true
 endif
 
+BOARD_KERNEL_IMAGE_NAME := Image.lz4-dtb
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+    LOCAL_KERNEL := device/google/crosshatch-kernel/Image.lz4-dtb
+else
+    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+endif
+
 PRODUCT_CHARACTERISTICS := nosdcard
 PRODUCT_SHIPPING_API_LEVEL := 28
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_KERNEL):kernel \
+    $(LOCAL_PATH)/recovery/root/sbin/touchdriver.sh:root/sbin/touchdriver.sh \
     $(LOCAL_PATH)/init.recovery.hardware.rc:root/init.recovery.$(PRODUCT_PLATFORM).rc \
+    $(LOCAL_PATH)/usb/android.hardware.usb@1.1-service.crosshatch.rc:root/android.hardware.usb@1.1-service.crosshatch.rc \
     $(LOCAL_PATH)/init.hardware.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).rc \
     $(LOCAL_PATH)/init.hardware.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).usb.rc \
     $(LOCAL_PATH)/ueventd.hardware.rc:$(TARGET_COPY_OUT_VENDOR)/ueventd.rc \
@@ -106,8 +115,6 @@ ifneq (,$(filter eng, $(TARGET_BUILD_VARIANT)))
       $(LOCAL_PATH)/init.hardware.mpssrfs.rc.userdebug:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).mpssrfs.rc
   PRODUCT_COPY_FILES += \
       $(LOCAL_PATH)/init.hardware.chamber.rc.userdebug:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.$(PRODUCT_PLATFORM).chamber.rc
-  PRODUCT_COPY_FILES += \
-      $(LOCAL_PATH)/init.hardware.wlc.rc.userdebug:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.$(PRODUCT_PLATFORM).wlc.rc
 else
   PRODUCT_COPY_FILES += \
       $(LOCAL_PATH)/init.hardware.diag.rc.user:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).diag.rc
@@ -301,10 +308,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     vendor.rild.libpath=/vendor/lib64/libril-qc-hal-qmi.so\
     ro.hardware.keystore_desede=true \
 
-# Native video calling
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.dbg.vt_avail_ovr=1
-
 # Disable snapshot timer
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.radio.snapshot_enabled=0 \
@@ -389,7 +392,9 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 
 PRODUCT_COPY_FILES += \
     device/google/crosshatch/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/libnfc-nci.conf \
-    device/google/crosshatch/nfc/libese-nxp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libese-nxp.conf
+    device/google/crosshatch/nfc/libese-nxp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libese-nxp.conf \
+    device/google/crosshatch/felica/loaderservice_updater_1.lss:$(TARGET_COPY_OUT_VENDOR)/etc/loaderservice_updater_1.lss \
+    device/google/crosshatch/felica/loaderservice_updater_2.lss:$(TARGET_COPY_OUT_VENDOR)/etc/loaderservice_updater_2.lss
 
 # TODO(b/72443662)
 PRODUCT_COPY_FILES += \
@@ -502,6 +507,10 @@ PRODUCT_PACKAGES += \
 LIB_NL := libnl_2
 PRODUCT_PACKAGES += $(LIB_NL)
 
+# Factory OTA
+PRODUCT_PACKAGES += \
+    FactoryOta
+
 # Audio effects
 PRODUCT_PACKAGES += \
     libvolumelistener \
@@ -552,17 +561,22 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
     $(LOCAL_PATH)/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml \
     $(LOCAL_PATH)/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
     $(LOCAL_PATH)/media_codecs_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml \
     $(LOCAL_PATH)/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
+    $(LOCAL_PATH)/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
     $(LOCAL_PATH)/media_codecs_google_c2_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml \
 
-# no xaac codecs for now, so don't copy the media_codecs_google*audio.xml files at this time.
+# configures both aac and xaac decoders
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
+
+# and ensure that the xaac decoder is built
+PRODUCT_PACKAGES += \
+    libstagefright_soft_xaacdec.vendor
 
 PRODUCT_PROPERTY_OVERRIDES += \
     audio.snd_card.open.retries=50
@@ -635,7 +649,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     vndk-sp
 
-#PRODUCT_ENFORCE_RRO_TARGETS := framework-res
+PRODUCT_ENFORCE_RRO_TARGETS := framework-res
 
 # Override heap growth limit due to high display density on device
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -670,11 +684,6 @@ PRODUCT_PACKAGES += \
 # Fingerprint
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint@2.1-service.fpc
-
-# Keystore
-PRODUCT_PACKAGES += \
-   android.hardware.keymaster@4.0-service \
-   libkeymaster4support
 
 # Reliability reporting
 PRODUCT_PACKAGES += \
@@ -788,4 +797,4 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Increment the SVN for any official public releases
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.build.svn=12
+    ro.vendor.build.svn=1

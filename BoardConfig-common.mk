@@ -18,7 +18,6 @@ TARGET_BOARD_PLATFORM := sdm845
 TARGET_BOARD_INFO_FILE := device/google/crosshatch/board-info.txt
 USES_DEVICE_GOOGLE_B1C1 := true
 TARGET_NO_BOOTLOADER := true
-TARGET_COMPILE_WITH_MSM_KERNEL := true
 
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-2a
@@ -34,20 +33,24 @@ TARGET_2ND_CPU_VARIANT := cortex-a75
 
 TARGET_BOARD_COMMON_PATH := device/google/crosshatch/sdm845
 
-BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 androidboot.console=ttyMSM0 printk.devkmsg=on
-BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x237 enforcing=0 androidboot.selinux=permissive
-BOARD_KERNEL_CMDLINE += ehci-hcd.park=3
-BOARD_KERNEL_CMDLINE += service_locator.enable=1
-BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware
-BOARD_KERNEL_CMDLINE += cgroup.memory=nokmem
-BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1
-BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 TARGET_KERNEL_CLANG_COMPILE := true
 TARGET_KERNEL_CLANG_VERSION := 9.0.5
 TARGET_KERNEL_SOURCE := kernel/google/bluecross
 TARGET_KERNEL_CONFIG := b1c1_defconfig
 BOARD_KERNEL_IMAGE_NAME := Image.lz4-dtb
+
+BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 androidboot.console=ttyMSM0 printk.devkmsg=on
+BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x237
+BOARD_KERNEL_CMDLINE += ehci-hcd.park=3
+BOARD_KERNEL_CMDLINE += service_locator.enable=1
+BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware
+BOARD_KERNEL_CMDLINE += cgroup.memory=nokmem
+# STOPSHIP Bringup hack- no low power
+BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1
+BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
+# For the love of all that is holy, please do not include this in your ROM unless you really want TWRP to not work correctly!
+BOARD_KERNEL_CMDLINE += androidboot.fastboot=1
 
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
@@ -65,7 +68,7 @@ BOARD_BOOT_HEADER_VERSION := 1
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 
 # DTBO partition definitions
-TARGET_NEEDS_DTBOIMAGE := true
+BOARD_PREBUILT_DTBOIMAGE := device/google/crosshatch-kernel/dtbo.img
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608
 
 TARGET_NO_BOOTLOADER ?= true
@@ -84,6 +87,11 @@ TARGET_RECOVERY_UI_LIB := \
   libnos_citadel_for_recovery \
   libnos_for_recovery
 
+TARGET_RECOVERY_TWRP_LIB := \
+  librecovery_twrp_crosshatch \
+  libnos_citadel_for_recovery \
+  libnos_for_recovery liblog
+
 BOARD_AVB_ENABLE := true
 BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 
@@ -92,13 +100,12 @@ BOARD_AVB_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 BOARD_AVB_SYSTEM_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS="--set_hashtree_disabled_flag"
+
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 
 # product.img
 BOARD_PRODUCTIMAGE_PARTITION_SIZE := 314572800
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
-TARGET_NEEDS_PRODUCTIMAGE := true
 TARGET_COPY_OUT_PRODUCT := product
 
 # system.img
@@ -119,14 +126,13 @@ BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x04000000
 
 TARGET_COPY_OUT_VENDOR := vendor
-BOARD_PREBUILT_VENDORIMAGE := true
 
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 # Install odex files into the other system image
 BOARD_USES_SYSTEM_OTHER_ODEX := true
 
-BOARD_ROOT_EXTRA_SYMLINKS := /vendor/dsp:/dsp
+BOARD_ROOT_EXTRA_SYMLINKS := /vendor/lib/dsp:/dsp
 BOARD_ROOT_EXTRA_SYMLINKS += /mnt/vendor/persist:/persist
 BOARD_ROOT_EXTRA_SYMLINKS += /vendor/firmware_mnt:/firmware
 
@@ -180,7 +186,7 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 WIFI_HIDL_FEATURE_AWARE := true
-WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
+WIFI_HIDL_FEATURE_DUAL_INTERFACE:= true
 
 # Audio
 BOARD_USES_ALSA_AUDIO := true
@@ -193,7 +199,6 @@ BOARD_SUPPORTS_SOUND_TRIGGER := true
 AUDIO_FEATURE_FLICKER_SENSOR_INPUT := true
 SOUND_TRIGGER_FEATURE_LPMA_ENABLED := true
 AUDIO_FEATURE_ENABLED_MAXX_AUDIO := true
-AUDIO_FEATURE_ENABLED_24BITS_CAMCORDER := true
 
 # Graphics
 TARGET_USES_GRALLOC1 := true
@@ -258,7 +263,34 @@ TARGET_USES_MKE2FS := true
 #    $(wildcard device/google/crosshatch-kernel/*.ko)
 #endif
 
+
 # Testing related defines
 BOARD_PERFSETUP_SCRIPT := platform_testing/scripts/perf-setup/b1c1-setup.sh
 
 -include vendor/google_devices/crosshatch/proprietary/BoardConfigVendor.mk
+
+# TWRP
+TW_THEME := portrait_hdpi
+BOARD_SUPPRESS_SECURE_ERASE := true
+TARGET_RECOVERY_QCOM_RTC_FIX := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TW_DEFAULT_BRIGHTNESS := "80"
+TW_INCLUDE_CRYPTO := true
+AB_OTA_UPDATER := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+#TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT)/system/lib64/libhardware_legacy.so
+#TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0
+#TARGET_RECOVERY_DEVICE_MODULES += android.hardware.confirmationui@1.0.so
+#TW_RECOVERY_ADDITIONAL_RELINK_FILES := out/target/product/$(PRODUCT_HARDWARE)/system/lib64/android.hardware.boot@1.0.so
+#TW_RECOVERY_ADDITIONAL_RELINK_FILES += out/target/product/$(PRODUCT_HARDWARE)/system/lib64/vndk-28/android.hardware.confirmationui@1.0.so
+#TARGET_RECOVERY_DEVICE_MODULES += libxml2 libicuuc libprotobuf-cpp-full
+#TW_RECOVERY_ADDITIONAL_RELINK_FILES += out/target/product/$(PRODUCT_HARDWARE)/system/lib64/libxml2.so out/target/product/$(PRODUCT_HARDWARE)/system/lib64/libicuuc.so out/target/product/$(PRODUCT_HARDWARE)/system/lib64/libprotobuf-cpp-full.so
+#TWRP_INCLUDE_LOGCAT := true
+#TARGET_USES_LOGD := true
+TW_NO_HAPTICS := true
+# MTP will not work until we update it to support ffs
+#TW_EXCLUDE_MTP := true
+PLATFORM_SECURITY_PATCH := 2025-12-31
+TW_USE_TOOLBOX := true
+TW_INCLUDE_REPACKTOOLS := true
+#TARGET_RECOVERY_PIXEL_FORMAT := ABGR_8888

@@ -75,7 +75,7 @@ on init && property:vendor.skip.init=0
 
     # start Citadel keymaster (StrongBox) early
     start vndservicemanager
-    start vendor.citadeld
+    start citadeld
     start vendor.keymaster-4-0-citadel
 
     # Boot time fs tune
@@ -121,13 +121,11 @@ on init && property:vendor.skip.init=0
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 20000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
 
     # configure governor settings for big cluster
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 825000
 
     # set default schedTune value for foreground/top-app
     write /dev/stune/foreground/schedtune.prefer_idle 1
@@ -578,7 +576,6 @@ on property:sys.boot_completed=1
 
     # Enable ZRAM on boot_complete
     swapon_all /vendor/etc/fstab.${ro.boot.hardware.platform}
-    write /proc/sys/vm/swappiness 100
 
     # Setup final cpuset
     write /dev/cpuset/top-app/cpus 0-7
@@ -893,6 +890,11 @@ on property:ro.boot.hardware.sku=G013D
 on property:sys.retaildemo.enabled=1
     setprop persist.vendor.charge.stop.level 35
     setprop persist.vendor.charge.start.level 30
+
+# system will not set the sys.retaildemo.enabled to 0 but this is used to set back to default charging
+on property:sys.retaildemo.enabled=0
+    setprop persist.vendor.charge.stop.level 100
+    setprop persist.vendor.charge.start.level 0
 
 on property:persist.vendor.charge.stop.level=*
     write /sys/devices/platform/soc/soc:google,charger/charge_stop_level ${persist.vendor.charge.stop.level}

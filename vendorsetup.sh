@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 The Android Open-Source Project
+# Copyright 2015 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,5 @@
 # limitations under the License.
 #
 
-on property:sys.boot_completed=1 && property:persist.vendor.limit.wlc.current=1
-    write /sys/class/power_supply/dc/current_max 75000
-
-on property:sys.boot_completed=1 && property:persist.vendor.limit.wlc.current=0
-    write /sys/class/power_supply/dc/current_max 1100000
-
-on property:vendor.disable.wlc=1
-    write /sys/class/power_supply/wireless/online 0
+add_lunch_combo aosp_crosshatch-userdebug
+add_lunch_combo aosp_blueline-userdebug
