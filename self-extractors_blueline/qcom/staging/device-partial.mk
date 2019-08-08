@@ -41,11 +41,9 @@ PRODUCT_COPY_FILES := \
     vendor/qcom/blueline/proprietary/lib64/lib-imsvtextutils.so:system/lib64/lib-imsvtextutils.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/lib-imsvt.so:system/lib64/lib-imsvt.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/lib-imsvtutils.so:system/lib64/lib-imsvtutils.so:qcom \
-    vendor/qcom/blueline/proprietary/lib64/libiperf.so:system/lib64/libiperf.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/liblistenjni.so:system/lib64/liblistenjni.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/liblistensoundmodel2.so:system/lib64/liblistensoundmodel2.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/libmdsprpc_system.so:system/lib64/libmdsprpc_system.so:qcom \
-    vendor/qcom/blueline/proprietary/lib64/libminui.so:system/lib64/libminui.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/libQTEEConnector_system.so:system/lib64/libQTEEConnector_system.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/librcc.so:system/lib64/librcc.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/libsdm-disp-apis.so:system/lib64/libsdm-disp-apis.so:qcom \
@@ -54,11 +52,11 @@ PRODUCT_COPY_FILES := \
     vendor/qcom/blueline/proprietary/lib64/libsecureui_svcsock_system.so:system/lib64/libsecureui_svcsock_system.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/libsensorslog.so:system/lib64/libsensorslog.so:qcom \
     vendor/qcom/blueline/proprietary/lib64/libsns_low_lat_stream_stub.so:system/lib64/libsns_low_lat_stream_stub.so:qcom \
-    vendor/qcom/crosshatch/proprietary/lib64/libOpenCL_system.so:system/lib64/libOpenCL_system.so:qcom \
-    vendor/qcom/crosshatch/proprietary/lib64/libprotobuf-cpp-full-rtti.so:system/lib64/libprotobuf-cpp-full-rtti.so:qcom \
-    vendor/qcom/crosshatch/proprietary/lib64/libqcbor.so:system/lib64/libqcbor.so:qcom \
-    vendor/qcom/crosshatch/proprietary/lib64/libsmcinvokecred.so:system/lib64/libsmcinvokecred.so:qcom \
-    vendor/qcom/crosshatch/proprietary/lib64/libtzcom.so:system/lib64/libtzcom.so:qcom \
+    vendor/qcom/blueline/proprietary/lib64/libOpenCL_system.so:system/lib64/libOpenCL_system.so:qcom \
+    vendor/qcom/blueline/proprietary/lib64/libprotobuf-cpp-full-rtti.so:system/lib64/libprotobuf-cpp-full-rtti.so:qcom \
+    vendor/qcom/blueline/proprietary/lib64/libqcbor.so:system/lib64/libqcbor.so:qcom \
+    vendor/qcom/blueline/proprietary/lib64/libsmcinvokecred.so:system/lib64/libsmcinvokecred.so:qcom \
+    vendor/qcom/blueline/proprietary/lib64/libtzcom.so:system/lib64/libtzcom.so:qcom \
     vendor/qcom/blueline/proprietary/libadsprpc_system.so:system/lib/libadsprpc_system.so:qcom \
     vendor/qcom/blueline/proprietary/libcdsprpc_system.so:system/lib/libcdsprpc_system.so:qcom \
     vendor/qcom/blueline/proprietary/libdiag_system.so:system/lib/libdiag_system.so:qcom \
@@ -70,12 +68,10 @@ PRODUCT_COPY_FILES := \
     vendor/qcom/blueline/proprietary/lib-imsvtextutils.so:system/lib/lib-imsvtextutils.so:qcom \
     vendor/qcom/blueline/proprietary/lib-imsvt.so:system/lib/lib-imsvt.so:qcom \
     vendor/qcom/blueline/proprietary/lib-imsvtutils.so:system/lib/lib-imsvtutils.so:qcom \
-    vendor/qcom/blueline/proprietary/libiperf.so:system/lib/libiperf.so:qcom \
     vendor/qcom/blueline/proprietary/liblistenjni.so:system/lib/liblistenjni.so:qcom \
     vendor/qcom/blueline/proprietary/liblistensoundmodel2.so:system/lib/liblistensoundmodel2.so:qcom \
     vendor/qcom/blueline/proprietary/liblogwrap.so:system/lib/liblogwrap.so:qcom \
     vendor/qcom/blueline/proprietary/libmdsprpc_system.so:system/lib/libmdsprpc_system.so:qcom \
-    vendor/qcom/blueline/proprietary/libminui.so:system/lib/libminui.so:qcom \
     vendor/qcom/blueline/proprietary/libprotobuf-cpp-full.so:system/lib/libprotobuf-cpp-full.so:qcom \
     vendor/qcom/blueline/proprietary/libqct_resampler.so:system/lib/libqct_resampler.so:qcom \
     vendor/qcom/blueline/proprietary/libQTEEConnector_system.so:system/lib/libQTEEConnector_system.so:qcom \
@@ -87,11 +83,11 @@ PRODUCT_COPY_FILES := \
     vendor/qcom/blueline/proprietary/libsensorslog.so:system/lib/libsensorslog.so:qcom \
     vendor/qcom/blueline/proprietary/libsns_low_lat_stream_skel.so:system/lib/rfsa/adsp/libsns_low_lat_stream_skel.so:qcom \
     vendor/qcom/blueline/proprietary/libsns_low_lat_stream_stub.so:system/lib/libsns_low_lat_stream_stub.so:qcom \
-    vendor/qcom/crosshatch/proprietary/libOpenCL_system.so:system/lib/libOpenCL_system.so:qcom \
-    vendor/qcom/crosshatch/proprietary/libprotobuf-cpp-full-rtti.so:system/lib/libprotobuf-cpp-full-rtti.so:qcom \
-    vendor/qcom/crosshatch/proprietary/libqcbor.so:system/lib/libqcbor.so:qcom \
-    vendor/qcom/crosshatch/proprietary/libsmcinvokecred.so:system/lib/libsmcinvokecred.so:qcom \
-    vendor/qcom/crosshatch/proprietary/libtzcom.so:system/lib/libtzcom.so:qcom \
+    vendor/qcom/blueline/proprietary/libOpenCL_system.so:system/lib/libOpenCL_system.so:qcom \
+    vendor/qcom/blueline/proprietary/libprotobuf-cpp-full-rtti.so:system/lib/libprotobuf-cpp-full-rtti.so:qcom \
+    vendor/qcom/blueline/proprietary/libqcbor.so:system/lib/libqcbor.so:qcom \
+    vendor/qcom/blueline/proprietary/libsmcinvokecred.so:system/lib/libsmcinvokecred.so:qcom \
+    vendor/qcom/blueline/proprietary/libtzcom.so:system/lib/libtzcom.so:qcom \
     vendor/qcom/blueline/proprietary/lpa.xml:system/etc/permissions/lpa.xml:qcom \
     vendor/qcom/blueline/proprietary/LteDirectDiscoveryLibrary.jar:system/framework/LteDirectDiscoveryLibrary.jar:qcom \
     vendor/qcom/blueline/proprietary/LteDirectDiscovery.xml:system/etc/permissions/LteDirectDiscovery.xml:qcom \

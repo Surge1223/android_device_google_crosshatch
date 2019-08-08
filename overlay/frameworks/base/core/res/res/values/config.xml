@@ -111,8 +111,7 @@
          Wifi interfaces.  If the device doesn't want to support tethering over Wifi this
          should be empty.  An example would be "softap.*" -->
     <string-array translatable="false" name="config_tether_wifi_regexs">
-        <item>"wlan0"</item>
-        <item>"softap.*"</item>
+        <item>"wlan\\d"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -249,6 +248,9 @@
     <!-- Doze: should the TYPE_PICK_UP_GESTURE sensor be used as a pulse signal. -->
     <bool name="config_dozePulsePickup">true</bool>
 
+     <!-- Specify custom blanking delay of the display -->
+    <integer name="config_screen_off_delay">0</integer>
+
     <!-- Type of the double tap sensor. Empty if double tap is not supported. -->
     <string name="config_dozeDoubleTapSensorType" translatable="false">com.google.sensor.double_touch</string>
 
@@ -270,6 +272,11 @@
     <!-- Flag specifying whether VoLTE is availasble on device -->
     <bool name="config_device_volte_available">true</bool>
 
+    <!-- Flag specifying whether VoLTE should be available for carrier: independent of
+        carrier provisioning. If false: hard disabled. If true: then depends on carrier
+        provisioning, availability etc -->
+   <bool name="config_carrier_volte_available">true</bool>
+
     <!-- Flag specifying whether VoLTE is available on device -->
     <bool name="config_device_vt_available">true</bool>
 
@@ -278,6 +285,11 @@
 
     <!-- Flag specifying whether WFC over IMS is availasble on device -->
     <bool name="config_device_wfc_ims_available">true</bool>
+
+    <!-- Flag specifying whether WFC over IMS should be available for carrier: independent of
+        carrier provisioning. If false: hard disabled. If true: then depends on carrier
+        provisioning, availability etc -->
+   <bool name="config_carrier_wfc_ims_available">true</bool>
 
     <!-- Configure mobile tcp buffer sizes in the form:
          rat-name:rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max
@@ -422,4 +434,8 @@
         <item>com.felicanetworks.mfc</item>
         <item>com.felicanetworks.mfm</item>
     </string-array>
+
+    <!-- Whether the Dreamliner (Pixel Stand) service should be enabled -->
+    <bool name="config_enableDreamlinerService">true</bool>
+
 </resources>

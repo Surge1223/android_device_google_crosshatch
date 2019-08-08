@@ -64,12 +64,6 @@ ifeq ($(wildcard vendor/google_devices/crosshatch/proprietary/device-vendor-cros
     BUILD_WITHOUT_VENDOR := true
 endif
 
-BOARD_KERNEL_IMAGE_NAME := Image.lz4-dtb
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-    LOCAL_KERNEL := device/google/crosshatch-kernel/Image.lz4-dtb
-else
-    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
 
 PRODUCT_CHARACTERISTICS := nosdcard
 PRODUCT_SHIPPING_API_LEVEL := 28
@@ -77,7 +71,6 @@ PRODUCT_SHIPPING_API_LEVEL := 28
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_KERNEL):kernel \
     $(LOCAL_PATH)/recovery/root/sbin/touchdriver.sh:root/sbin/touchdriver.sh \
     $(LOCAL_PATH)/init.recovery.hardware.rc:root/init.recovery.$(PRODUCT_PLATFORM).rc \
     $(LOCAL_PATH)/usb/android.hardware.usb@1.1-service.crosshatch.rc:root/android.hardware.usb@1.1-service.crosshatch.rc \
@@ -685,6 +678,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint@2.1-service.fpc
 
+# Keystore
+PRODUCT_PACKAGES += \
+   android.hardware.keymaster@4.0-service \
+   libkeymaster4support
+
 # Reliability reporting
 PRODUCT_PACKAGES += \
     hardware.google.pixelstats@1.0-service \
@@ -797,4 +795,4 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Increment the SVN for any official public releases
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.build.svn=1
+    ro.vendor.build.svn=12
