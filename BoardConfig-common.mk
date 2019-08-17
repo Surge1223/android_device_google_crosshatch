@@ -50,7 +50,7 @@ BOARD_KERNEL_CMDLINE += cgroup.memory=nokmem
 BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1
 BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
 # For the love of all that is holy, please do not include this in your ROM unless you really want TWRP to not work correctly!
-BOARD_KERNEL_CMDLINE += androidboot.fastboot=1
+#BOARD_KERNEL_CMDLINE += androidboot.fastboot=1
 
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
@@ -278,7 +278,7 @@ TW_DEFAULT_BRIGHTNESS := "80"
 TW_INCLUDE_CRYPTO := true
 AB_OTA_UPDATER := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
-#TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT)/system/lib64/libhardware_legacy.so
+#TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT_DIR)/system/lib64/libhardware_legacy.so
 #TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0
 #TARGET_RECOVERY_DEVICE_MODULES += android.hardware.confirmationui@1.0.so
 #TW_RECOVERY_ADDITIONAL_RELINK_FILES := out/target/product/$(PRODUCT_HARDWARE)/system/lib64/android.hardware.boot@1.0.so
@@ -293,4 +293,8 @@ TW_NO_HAPTICS := true
 PLATFORM_SECURITY_PATCH := 2025-12-31
 TW_USE_TOOLBOX := true
 TW_INCLUDE_REPACKTOOLS := true
+TW_HAS_INJECTTWRP := true
+TW_HAS_DATA_MEDIA := true
+TW_HAS_BOOT_SLOTS := true
+TW_INJECT_AFTER_ZIP := true
 #TARGET_RECOVERY_PIXEL_FORMAT := ABGR_8888
