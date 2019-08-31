@@ -14,6 +14,9 @@ recovery_only(`
  allow recovery rootfs:lnk_file create_file_perms;
  allow recovery selinuxfs:file w_file_perms;
  allow recovery system_data_file:file r_file_perms;
+ allow recovery system_file:dir mounton;
  allow recovery vendor_tee_listener_prop:property_service set;
  allow recovery vndbinder_device:chr_file r_file_perms;
+# Sideload backuptool
+ allow recovery self:process setexec;
 ')

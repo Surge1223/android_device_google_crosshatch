@@ -1,0 +1,97 @@
+diff --git a/private/backuptool.te b/private/backuptool.te
+new file mode 100644
+index 0000000..4dc0306
+--- /dev/null
++++ b/private/backuptool.te
+@@ -0,0 +1,15 @@
++type backuptool, domain, coredomain;
++
++permissive backuptool;
++
++neverallow {
++    domain
++    -recovery
++    -update_engine
++} backuptool:process transition;
++
++
++userdebug_or_eng(`
++    permissive backuptool;
++')
++
+diff --git a/../crosshatch/sepolicy/private/file_contexts b/private/file_contexts
+index 0b25688..2342f06 100644
+--- a/../crosshatch/sepolicy/private/file_contexts
++++ b/private/file_contexts
+@@ -1,2 +1,8 @@
++
++# Postinstall
++/system/bin/backuptool_ab\.functions              u:object_r:otapreopt_chroot_exec:s0
++/system/bin/backuptool_ab\.sh                     u:object_r:otapreopt_chroot_exec:s0
++/system/bin/backuptool_postinstall\.sh            u:object_r:otapreopt_chroot_exec:s0
++
+ /system/bin/preloads_copy\.sh   u:object_r:preloads_copy_exec:s0
+ /system/bin/sysinit             u:object_r:sysinit_exec:s0
+diff --git a/../crosshatch/sepolicy/private/keys.conf b/private/keys.conf
+index 1f60f88..50a1aa9 100644
+--- a/../crosshatch/sepolicy/private/keys.conf
++++ b/private/keys.conf
+@@ -1,2 +1,2 @@
+ [@WFCACTIVATION]
+-ALL : device/google/crosshatch/sepolicy/private/certs/wfcactivation.x509.pem
++ALL : device/google/crosshatch-sepolicy/private/certs/wfcactivation.x509.pem
+diff --git a/../crosshatch/sepolicy/private/priv_app.te b/private/priv_app.te
+index b9253ae..e83d68c 100644
+--- a/../crosshatch/sepolicy/private/priv_app.te
++++ b/private/priv_app.te
+@@ -3,3 +3,5 @@ dontaudit priv_app zygote:dir search;
+ dontaudit priv_app mnt_vendor_file:dir search;
+ allow priv_app app_data_file:dir search;
+ allow priv_app vendor_default_prop:file read;
++allow priv_app ota_package_file:dir create_dir_perms;
++
+diff --git a/../crosshatch/sepolicy/private/recovery.te b/private/recovery.te
+index 0cf71f1..c7bf4b1 100644
+--- a/../crosshatch/sepolicy/private/recovery.te
++++ b/private/recovery.te
+@@ -14,6 +14,9 @@ recovery_only(`
+  allow recovery rootfs:lnk_file create_file_perms;
+  allow recovery selinuxfs:file w_file_perms;
+  allow recovery system_data_file:file r_file_perms;
++ allow recovery system_file:dir mounton;
+  allow recovery vendor_tee_listener_prop:property_service set;
+  allow recovery vndbinder_device:chr_file r_file_perms;
++# Sideload backuptool
++ allow recovery self:process setexec;
+ ')
+diff --git a/private/rootfs.te b/private/rootfs.te
+new file mode 100644
+index 0000000..9404006
+--- /dev/null
++++ b/private/rootfs.te
+@@ -0,0 +1,2 @@
++allow rootfs labeledfs:filesystem associate;
++
+diff --git a/private/sdcardfs.te b/private/sdcardfs.te
+new file mode 100644
+index 0000000..245f9a8
+--- /dev/null
++++ b/private/sdcardfs.te
+@@ -0,0 +1 @@
++allow sdcardfs labeledfs:filesystem associate;
+diff --git a/private/update_engine.te b/private/update_engine.te
+new file mode 100644
+index 0000000..c257b03
+--- /dev/null
++++ b/private/update_engine.te
+@@ -0,0 +1,10 @@
++# Read updates from storage data
++r_dir_file(update_engine, mnt_user_file)
++r_dir_file(update_engine, storage_file)
++
++# Allow mount and unmount of system partition
++allow update_engine labeledfs:filesystem { mount unmount };
++
++# Allow transition to backuptool domain
++allow update_engine self:process setexec;
++domain_trans(update_engine, otapreopt_chroot_exec, backuptool)
