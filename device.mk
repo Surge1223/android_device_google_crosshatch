@@ -29,7 +29,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # enable cal by default on accel sensor
 PRODUCT_PRODUCT_PROPERTIES += \
-    persist.vendor.debug.sensors.accel_cal=1
+    persist.vendor.debug.sensors.accel_cal=1 \
+    persist.adb.tcp.port=5555
 
 # The default value of this variable is false and should only be set to true when
 # the device allows users to retain eSIM profiles after factory reset of user data.
@@ -783,7 +784,7 @@ endif
 
 # Preopt SystemUI
 PRODUCT_DEXPREOPT_SPEED_APPS += \
-    SystemUI \
+    SystemUIGoogle \
 
 # Enable stats logging in LMKD
 TARGET_LMKD_STATS_LOG := true
@@ -818,9 +819,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.build.svn=20
 
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.adb.secure=1
-
 # pixel atrace HAL
 PRODUCT_PACKAGES += \
     android.hardware.atrace@1.0-service.pixel
@@ -841,8 +839,6 @@ PRODUCT_COPY_FILES += \
 # powerstats HAL
 PRODUCT_PACKAGES += \
     android.hardware.power.stats@1.0-service.pixel
-
-# SurfaceFlinger
 
 # Graphics
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.vsync_event_phase_offset_ns=2000000
